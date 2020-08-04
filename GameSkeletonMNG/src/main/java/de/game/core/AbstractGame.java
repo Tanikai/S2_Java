@@ -67,11 +67,13 @@ public abstract class AbstractGame implements Serializable {
 
     /**
      * Das Spiel wurde beendet.
+     * z.B. highscore oder speichern
      */
     public abstract void done();
 
     /**
-     * Berechnungen durchführen.
+     * Berechnungen durchführen. -> der "Ticker", welcher ein Mal pro Tick
+     * aufgerufen wird.
      *
      * @param tickCount Die Anzahl der Durchläufe.
      */

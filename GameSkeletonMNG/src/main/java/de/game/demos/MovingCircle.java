@@ -71,7 +71,7 @@ public class MovingCircle extends AbstractGame {
     }
 
     /**
-     * Spiel malen.
+     * Spiel zeichnen.
      *
      * @param graphics Der grafische Kontext.
      */
