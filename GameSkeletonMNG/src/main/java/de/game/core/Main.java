@@ -5,8 +5,12 @@
  */
 package de.game.core;
 
+// Spiele
 import de.game.demos.MovingCircle;
 import de.game.demos.MovingRect;
+import de.game.snake.SnakeGame;
+
+// Sonstiges
 import java.awt.AWTEvent;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -137,7 +141,8 @@ public class Main extends Frame implements Runnable {
     private void init() {
         // hier kommt rein, was gestartet wird
 //        game = new MovingCircle(this);
-        game = new MovingRect(this, 800, 600);
+//        game = new MovingRect(this, 800, 600);
+        game = new SnakeGame(this);
         // die folgende Zeile bleibt immer...
         game.init();
     }
@@ -447,5 +452,5 @@ public class Main extends Frame implements Runnable {
 
         super.processComponentEvent(e);
     }
-    
+
 }
