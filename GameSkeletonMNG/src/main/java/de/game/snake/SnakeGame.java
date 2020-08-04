@@ -15,7 +15,7 @@ public class SnakeGame extends AbstractGame {
     public SnakeGame(Frame core) {
         super(core, 800, 600);
         FFeld = new Spielfeld(800, 600);
-        FSchlange1 = new Schlange(10, 10, 'u', new Color(124, 158, 178));
+        FSchlange1 = new Schlange(10, 10, 1, 0, new Color(124, 158, 178));
     }
 
     @Override
