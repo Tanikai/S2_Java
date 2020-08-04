@@ -19,6 +19,7 @@ public class MovingRect extends AbstractGame {
     // Variablen
     private int x, y;
     private int vX, vY;
+    private int pacWidth, pacHeight;
 
     public MovingRect(Frame core, int width, int height) {
         super(core, width, height); // Konstruktor der Parent-Klasse
@@ -28,8 +29,10 @@ public class MovingRect extends AbstractGame {
     public void init() {
         x = 100;
         y = 100;
-        vX = 80;
-        vY = 40;
+        vX = 8;
+        vY = 4;
+        pacWidth = 100;
+        pacHeight = 100;
     }
 
     @Override
@@ -44,13 +47,13 @@ public class MovingRect extends AbstractGame {
         System.out.println("X/Y: " + x + "/" + y);
 
         // Rechts oder links abprallen
-        if ((x >= 700) || (x <= 0)) {
+        if ((x >= getWidth()-pacWidth) || (x <= 0)) {
             vX *= -1;
             System.out.println("Abprallen");
         }
 
         // Oben oder unten abprallen
-        if ((y <= 0) || (y >= 500)) {
+        if ((y <= 0) || (y >= getHeight()-pacHeight)) {
             vY *= -1;
             System.out.println("Abprallen");
         }
@@ -61,7 +64,7 @@ public class MovingRect extends AbstractGame {
         Color farbe_pacman = new Color(255, 238, 0);
 
         graphics.setColor(farbe_pacman);
-        graphics.fillOval(x, y, 100, 100);
+        graphics.fillOval(x, y, pacWidth, pacHeight);
 
         graphics.setColor(Color.black);
         graphics.fillOval(x + 25, y + 25, 10, 10);
