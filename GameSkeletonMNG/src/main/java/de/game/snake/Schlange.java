@@ -8,7 +8,6 @@ public class Schlange {
     // Variablen
     private int FKopfX, FKopfY;
     private int FVX, FVY;
-    private int FWidth, FHeight;
     private Color FColor;
 
     // Implementierung
@@ -21,9 +20,7 @@ public class Schlange {
         System.out.println("VX/VY: " + FVX + "/" + FVY);
     }
 
-    public void init(int i_FeldWidth, int i_FeldHeight) {
-        FWidth = i_FeldWidth / 10;
-        FHeight = i_FeldHeight / 10;
+    public void init() {
     }
 
     public void calc(int tickCount) {
@@ -47,16 +44,16 @@ public class Schlange {
     }
 
     public void checkRand() {
-        if (FKopfX >= FWidth) {
+        if (FKopfX >= Spielfeld.WIDTH) {
             FKopfX = 0;
         } else if (FKopfX < 0) {
-            FKopfX = FWidth - 1;
+            FKopfX = Spielfeld.WIDTH - 1;
         }
 
-        if (FKopfY >= FHeight) {
+        if (FKopfY >= Spielfeld.HEIGHT) {
             FKopfY = 0;
         } else if (FKopfY < 0) {
-            FKopfY = FHeight - 1;
+            FKopfY = Spielfeld.HEIGHT - 1;
         }
 
     }
