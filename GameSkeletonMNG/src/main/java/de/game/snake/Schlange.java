@@ -55,6 +55,13 @@ public class Schlange {
         } else if (FKopfY < 0) {
             FKopfY = Spielfeld.HEIGHT - 1;
         }
+    }
 
+    public int getKopfX() {
+        return FKopfX;
+    }
+
+    public int getKopfY() {
+        return FKopfY;
     }
 }

@@ -33,6 +33,12 @@ public class SnakeGame extends AbstractGame {
     @Override
     public void calc(int tickCount) {
         FSchlange1.calc(tickCount);
+        
+        if (FFeld.istWand(FSchlange1.getKopfX(), FSchlange1.getKopfY()))
+        {
+            // Spielzustand GAME_OVER
+            System.out.println("Schlange ist gegen Wand gelaufen, Game Over.");
+        }
     }
 
     @Override

@@ -9,7 +9,7 @@ public class Spielfeld {
     private boolean[][] FWalls;
     public static int WIDTH = 80;
     public static int HEIGHT = 60;
-    
+
     private Color cWall;
     private Color cField;
 
@@ -58,6 +58,9 @@ public class Spielfeld {
                 }
             }
         }
+    }
 
+    public boolean istWand(int i_x, int i_y) {
+        return (FWalls[i_x][i_y]);
     }
 }
