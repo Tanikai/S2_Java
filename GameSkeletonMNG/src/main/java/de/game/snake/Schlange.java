@@ -24,13 +24,21 @@ public class Schlange {
 
     }
 
-    public void calc() {
-        FKopfX += FVX;
-        FKopfY += FVY;
+    public void calc(int tickCount) {
+        // Geschwindigkeit dynamisch anhand der Länge setzen        
+        if (0 == tickCount % 5) {
+            FKopfX += FVX;
+            FKopfY += FVY;
+        }
     }
 
     public void draw(Graphics g) {
         g.setColor(FColor);
-        g.fillRect(FKopfX*10, FKopfY*10, 10, 10);
+        g.fillRect(FKopfX * 10, FKopfY * 10, 10, 10);
+    }
+
+    public void neueRichtung(int i_vX, int i_vY) {
+        FVX = i_vX;
+        FVY = i_vY;
     }
 }

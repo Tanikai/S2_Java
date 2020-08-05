@@ -4,6 +4,7 @@ import de.game.core.AbstractGame;
 import java.awt.Color;
 import java.awt.Frame;
 import java.awt.Graphics;
+import java.awt.event.KeyEvent;
 
 public class SnakeGame extends AbstractGame {
 
@@ -26,12 +27,12 @@ public class SnakeGame extends AbstractGame {
 
     @Override
     public void done() {
-        
+
     }
 
     @Override
     public void calc(int tickCount) {
-        FSchlange1.calc();
+        FSchlange1.calc(tickCount);
     }
 
     @Override
@@ -40,4 +41,27 @@ public class SnakeGame extends AbstractGame {
         FSchlange1.draw(graphics);
     }
 
+    @Override
+    public void processKeyEvent(KeyEvent e) {
+        if (e.getID() == KeyEvent.KEY_RELEASED) {
+            switch (e.getKeyCode()) {
+                case KeyEvent.VK_RIGHT: {
+                    FSchlange1.neueRichtung(1, 0);
+                }
+                break;
+                case KeyEvent.VK_LEFT: {
+                    FSchlange1.neueRichtung(-1, 0);
+                }
+                break;
+                case KeyEvent.VK_UP: {
+                    FSchlange1.neueRichtung(0, -1);
+                }
+                break;
+                case KeyEvent.VK_DOWN: {
+                    FSchlange1.neueRichtung(0, 1);
+                }
+                break;
+            }
+        }
+    }
 }
