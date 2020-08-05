@@ -11,18 +11,21 @@ public class SnakeGame extends AbstractGame {
     // Variablen
     Spielfeld FFeld;
     Schlange FSchlange1;
+    int FBreite, FHoehe;
 
     // Implementierung
     public SnakeGame(Frame core) {
         super(core, 800, 600);
-        FFeld = new Spielfeld(800, 600);
+        FBreite = 800;
+        FHoehe = 600;
+        FFeld = new Spielfeld(FBreite, FHoehe);
         FSchlange1 = new Schlange(10, 10, 1, 0, new Color(124, 158, 178));
     }
 
     @Override
     public void init() {
         FFeld.init();
-        FSchlange1.init();
+        FSchlange1.init(FBreite, FHoehe);
     }
 
     @Override

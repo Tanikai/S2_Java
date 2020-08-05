@@ -8,6 +8,7 @@ public class Schlange {
     // Variablen
     private int FKopfX, FKopfY;
     private int FVX, FVY;
+    private int FWidth, FHeight;
     private Color FColor;
 
     // Implementierung
@@ -20,8 +21,9 @@ public class Schlange {
         System.out.println("VX/VY: " + FVX + "/" + FVY);
     }
 
-    public void init() {
-
+    public void init(int i_FeldWidth, int i_FeldHeight) {
+        FWidth = i_FeldWidth / 10;
+        FHeight = i_FeldHeight / 10;
     }
 
     public void calc(int tickCount) {
@@ -30,6 +32,8 @@ public class Schlange {
             FKopfX += FVX;
             FKopfY += FVY;
         }
+
+        checkRand();
     }
 
     public void draw(Graphics g) {
@@ -40,5 +44,20 @@ public class Schlange {
     public void neueRichtung(int i_vX, int i_vY) {
         FVX = i_vX;
         FVY = i_vY;
+    }
+
+    public void checkRand() {
+        if (FKopfX >= FWidth) {
+            FKopfX = 0;
+        } else if (FKopfX < 0) {
+            FKopfX = FWidth - 1;
+        }
+
+        if (FKopfY >= FHeight) {
+            FKopfY = 0;
+        } else if (FKopfY < 0) {
+            FKopfY = FHeight - 1;
+        }
+
     }
 }
