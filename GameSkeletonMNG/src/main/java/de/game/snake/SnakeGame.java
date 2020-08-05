@@ -8,7 +8,17 @@ import java.awt.event.KeyEvent;
 
 public class SnakeGame extends AbstractGame {
 
+    // Konstanten
+    public static final int ZUSTAND_SPLASH_SCREEN = 0;
+    public static final int ZUSTAND_GAME_RUNNING = 1;
+    public static final int ZUSTAND_GAME_OVER = 2;
+
+    public static final Color C_LIGHT = new Color(248, 244, 227);
+    public static final Color C_DARK = new Color(26, 20, 35);
+
     // Variablen
+    private int FZustand;
+
     Spielfeld FFeld;
     Schlange FSchlange1;
 
@@ -17,12 +27,13 @@ public class SnakeGame extends AbstractGame {
         super(core, 800, 600);
         FFeld = new Spielfeld();
         FSchlange1 = new Schlange(10, 10, 1, 0, new Color(124, 158, 178));
+        FZustand = ZUSTAND_SPLASH_SCREEN;
     }
 
     @Override
     public void init() {
         FFeld.init();
-        FSchlange1.init();
+        FSchlange1.init(10, 10, 1, 0);
     }
 
     @Override
@@ -32,42 +43,86 @@ public class SnakeGame extends AbstractGame {
 
     @Override
     public void calc(int tickCount) {
-        FSchlange1.calc(tickCount);
-        
-        if (FFeld.istWand(FSchlange1.getKopfX(), FSchlange1.getKopfY()))
-        {
-            // Spielzustand GAME_OVER
-            System.out.println("Schlange ist gegen Wand gelaufen, Game Over.");
+        switch (FZustand) {
+            case ZUSTAND_GAME_RUNNING: {
+                FSchlange1.calc(tickCount);
+
+                if (FFeld.istWand(FSchlange1.getKopfX(), FSchlange1.getKopfY())) {
+                    FZustand = ZUSTAND_GAME_OVER;
+                }
+            }
+            break;
+            case ZUSTAND_SPLASH_SCREEN: {
+                FSchlange1.init(10, 10, 1, 0);
+            }
+            break;
+            case ZUSTAND_GAME_OVER: {
+                // Game Over-Screen calc
+            }
+            break;
         }
     }
 
     @Override
     public void draw(Graphics graphics) {
-        FFeld.draw(graphics);
-        FSchlange1.draw(graphics);
+        switch (FZustand) {
+            case ZUSTAND_GAME_RUNNING: {
+                FFeld.draw(graphics);
+                FSchlange1.draw(graphics);
+            }
+            break;
+            case ZUSTAND_SPLASH_SCREEN: {
+                graphics.setColor(C_DARK);
+                graphics.fillRect(0, 0, Spielfeld.WIDTH * 10, Spielfeld.HEIGHT * 10);
+                graphics.setColor(C_LIGHT);
+            }
+            break;
+            case ZUSTAND_GAME_OVER: {
+                graphics.setColor(C_DARK);
+                graphics.fillRect(0, 0, Spielfeld.WIDTH * 10, Spielfeld.HEIGHT * 10);
+                graphics.setColor(C_LIGHT);
+                graphics.drawString("Game over.", 100, 100);
+            }
+            break;
+        }
     }
 
     @Override
     public void processKeyEvent(KeyEvent e) {
-        if (e.getID() == KeyEvent.KEY_RELEASED) {
-            switch (e.getKeyCode()) {
-                case KeyEvent.VK_RIGHT: {
-                    FSchlange1.neueRichtung(1, 0);
+        switch (FZustand) {
+            case ZUSTAND_GAME_RUNNING: {
+                if (e.getID() == KeyEvent.KEY_RELEASED) {
+                    switch (e.getKeyCode()) {
+                        case KeyEvent.VK_RIGHT: {
+                            FSchlange1.neueRichtung(1, 0);
+                        }
+                        break;
+                        case KeyEvent.VK_LEFT: {
+                            FSchlange1.neueRichtung(-1, 0);
+                        }
+                        break;
+                        case KeyEvent.VK_UP: {
+                            FSchlange1.neueRichtung(0, -1);
+                        }
+                        break;
+                        case KeyEvent.VK_DOWN: {
+                            FSchlange1.neueRichtung(0, 1);
+                        }
+                        break;
+                    }
                 }
-                break;
-                case KeyEvent.VK_LEFT: {
-                    FSchlange1.neueRichtung(-1, 0);
-                }
-                break;
-                case KeyEvent.VK_UP: {
-                    FSchlange1.neueRichtung(0, -1);
-                }
-                break;
-                case KeyEvent.VK_DOWN: {
-                    FSchlange1.neueRichtung(0, 1);
-                }
-                break;
             }
+            break;
+
+            case ZUSTAND_SPLASH_SCREEN: {
+                FZustand = ZUSTAND_GAME_RUNNING;
+            }
+            break;
+
+            case ZUSTAND_GAME_OVER: {
+                FZustand = ZUSTAND_SPLASH_SCREEN;
+            }
+            break;
         }
     }
 }

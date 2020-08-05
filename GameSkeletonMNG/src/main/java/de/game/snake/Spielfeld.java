@@ -10,14 +10,9 @@ public class Spielfeld {
     public static int WIDTH = 80;
     public static int HEIGHT = 60;
 
-    private Color cWall;
-    private Color cField;
-
     // Implementierung    
     public Spielfeld() {
         FWalls = new boolean[WIDTH][HEIGHT];
-        cWall = new Color(248, 244, 227);
-        cField = new Color(26, 20, 35);
     }
 
     public void init() {
@@ -50,10 +45,10 @@ public class Spielfeld {
         for (int i = 0; i < WIDTH; i++) {
             for (int k = 0; k < HEIGHT; k++) {
                 if (FWalls[i][k]) {
-                    g.setColor(cWall);
+                    g.setColor(SnakeGame.C_LIGHT);
                     g.fillRect(i * 10, k * 10, 10, 10);
                 } else {
-                    g.setColor(cField);
+                    g.setColor(SnakeGame.C_DARK);
                     g.fillRect(i * 10, k * 10, 10, 10);
                 }
             }

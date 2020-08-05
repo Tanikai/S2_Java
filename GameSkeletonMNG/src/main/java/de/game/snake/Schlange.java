@@ -20,7 +20,11 @@ public class Schlange {
         System.out.println("VX/VY: " + FVX + "/" + FVY);
     }
 
-    public void init() {
+    public void init(int i_x, int i_y, int i_vx, int i_vy) {
+        FKopfX = i_x;
+        FKopfY = i_y;
+        FVX = i_vx;
+        FVY = i_vy;
     }
 
     public void calc(int tickCount) {
