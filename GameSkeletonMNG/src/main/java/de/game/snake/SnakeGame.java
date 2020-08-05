@@ -34,6 +34,7 @@ public class SnakeGame extends AbstractGame {
     public void init() {
         FFeld.init();
         FSchlange1.init(10, 10, 1, 0);
+        FSchlange1.wachsen(5);
     }
 
     @Override
@@ -45,15 +46,20 @@ public class SnakeGame extends AbstractGame {
     public void calc(int tickCount) {
         switch (FZustand) {
             case ZUSTAND_GAME_RUNNING: {
-                FSchlange1.calc(tickCount);
+                if (FSchlange1.calc(tickCount)) {
+                    if (FFeld.istWand(FSchlange1.getKopfX(), FSchlange1.getKopfY())) {
+                        FZustand = ZUSTAND_GAME_OVER;
+                        System.out.println("Collided with wall");
+                    }
+                    if (FSchlange1.istKoerper(FSchlange1.getKopfX(), FSchlange1.getKopfY())) {
+                        FZustand = ZUSTAND_GAME_OVER;
 
-                if (FFeld.istWand(FSchlange1.getKopfX(), FSchlange1.getKopfY())) {
-                    FZustand = ZUSTAND_GAME_OVER;
+                    }
                 }
             }
             break;
             case ZUSTAND_SPLASH_SCREEN: {
-                FSchlange1.init(10, 10, 1, 0);
+                // Splash Screen calc
             }
             break;
             case ZUSTAND_GAME_OVER: {
@@ -75,13 +81,14 @@ public class SnakeGame extends AbstractGame {
                 graphics.setColor(C_DARK);
                 graphics.fillRect(0, 0, Spielfeld.WIDTH * 10, Spielfeld.HEIGHT * 10);
                 graphics.setColor(C_LIGHT);
+                graphics.drawString("Press [SPACE] to start.", 100, 100);
             }
             break;
             case ZUSTAND_GAME_OVER: {
                 graphics.setColor(C_DARK);
                 graphics.fillRect(0, 0, Spielfeld.WIDTH * 10, Spielfeld.HEIGHT * 10);
                 graphics.setColor(C_LIGHT);
-                graphics.drawString("Game over.", 100, 100);
+                graphics.drawString("Game over. Press [SPACE] to play again.", 100, 100);
             }
             break;
         }
@@ -115,12 +122,21 @@ public class SnakeGame extends AbstractGame {
             break;
 
             case ZUSTAND_SPLASH_SCREEN: {
-                FZustand = ZUSTAND_GAME_RUNNING;
+                if (e.getID() == KeyEvent.KEY_PRESSED) {
+                    if (e.getKeyCode() == KeyEvent.VK_SPACE) {
+                        this.init();
+                        FZustand = ZUSTAND_GAME_RUNNING;
+                    }
+                }
             }
             break;
 
             case ZUSTAND_GAME_OVER: {
-                FZustand = ZUSTAND_SPLASH_SCREEN;
+                if (e.getID() == KeyEvent.KEY_PRESSED) {
+                    if (e.getKeyCode() == KeyEvent.VK_SPACE) {
+                        FZustand = ZUSTAND_SPLASH_SCREEN;
+                    }
+                }
             }
             break;
         }

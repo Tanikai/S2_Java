@@ -35,7 +35,7 @@ public class Spielfeld {
         }
 
         LTenth = HEIGHT / 10;
-        for (i = LTenth * 3; i < HEIGHT - 3 * LTenth; i++) {
+        for (i = LTenth * 4; i < HEIGHT - 4 * LTenth; i++) {
             FWalls[0][i] = false; // links
             FWalls[WIDTH - 1][i] = false; // rechts
         }
