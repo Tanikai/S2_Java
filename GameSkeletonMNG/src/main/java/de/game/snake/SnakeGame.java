@@ -2,8 +2,11 @@ package de.game.snake;
 
 import de.game.core.AbstractGame;
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Frame;
 import java.awt.Graphics;
+import java.awt.Image;
+import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
 
 public class SnakeGame extends AbstractGame {
@@ -15,6 +18,9 @@ public class SnakeGame extends AbstractGame {
 
     public static final Color C_LIGHT = new Color(248, 244, 227);
     public static final Color C_DARK = new Color(26, 20, 35);
+
+    private final Image IMG_SPLASH = Toolkit.getDefaultToolkit().getImage(SnakeGame.class.getResource("/splashscreen.png"));
+    private final Image IMG_SNAKE = Toolkit.getDefaultToolkit().getImage(SnakeGame.class.getResource("/catsnake.png"));
 
     // Variablen
     private int FZustand;
@@ -78,17 +84,32 @@ public class SnakeGame extends AbstractGame {
             }
             break;
             case ZUSTAND_SPLASH_SCREEN: {
+                long LTime = System.currentTimeMillis();
+                int LOffsetX = (int) (LTime % 17 + LTime % 61 / 7) / 3;
+                int LOffsetY = (int) (LTime % 19 + LTime % 151 / 11) / 3;
+
+                graphics.drawImage(IMG_SPLASH, 0, 0, null);
+                graphics.drawImage(IMG_SNAKE, 100 + LOffsetX, 300 + LOffsetY, 250, 250, null);
+
                 graphics.setColor(C_DARK);
-                graphics.fillRect(0, 0, Spielfeld.WIDTH * 10, Spielfeld.HEIGHT * 10);
-                graphics.setColor(C_LIGHT);
-                graphics.drawString("Press [SPACE] to start.", 100, 100);
+
+                graphics.setFont(new Font("TimesRoman", Font.PLAIN, 20));
+                graphics.drawString("hissssss", 250 + LOffsetX, 325 + LOffsetY);
+
+                graphics.setFont(new Font("Arial", Font.PLAIN, 30));
+                graphics.drawString("Press [SPACE] to start.", 300, 400);
+
             }
             break;
             case ZUSTAND_GAME_OVER: {
-                graphics.setColor(C_DARK);
+                FFeld.draw(graphics);
+                FSchlange1.draw(graphics);
+                Color c = new Color(0, 0, 0, 128);
+                graphics.setColor(c);
                 graphics.fillRect(0, 0, Spielfeld.WIDTH * 10, Spielfeld.HEIGHT * 10);
                 graphics.setColor(C_LIGHT);
                 graphics.drawString("Game over. Press [SPACE] to play again.", 100, 100);
+
             }
             break;
         }
