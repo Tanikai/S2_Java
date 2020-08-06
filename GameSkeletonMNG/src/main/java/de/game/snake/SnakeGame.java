@@ -42,7 +42,7 @@ public class SnakeGame extends AbstractGame {
     public void init() {
         FFeld.init();
         FSchlange1.init(10, 10, 1, 0);
-        FSchlange1.wachsen(0);
+        FSchlange1.wachsen(9);
         FKeksdose.init();
     }
     
