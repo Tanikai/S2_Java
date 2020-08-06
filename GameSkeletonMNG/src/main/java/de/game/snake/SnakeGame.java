@@ -249,7 +249,7 @@ public class SnakeGame extends AbstractGame {
 
         g.setColor(C_DARK);
 
-        g.setFont(new Font("TimesRoman", Font.PLAIN, 20));
+        g.setFont(new Font("Papyrus", Font.PLAIN, 20));
         g.drawString("hissssss", 250 + LOffsetX, 325 + LOffsetY);
 
         g.setFont(new Font("Arial", Font.PLAIN, 30));

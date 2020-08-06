@@ -35,7 +35,12 @@ public class Schlange {
 
     public boolean calc(int tickCount) {
         // ToDo: Geschwindigkeit dynamisch anhand der Länge setzen        
-        if (0 == tickCount % 5) {
+        int LSpeed = 5 - (FKoerper.size() / 5);
+        if (LSpeed < 1) {
+            LSpeed = 1;
+        }
+
+        if (0 == tickCount % LSpeed) {
             if (!FCommandQueue.isEmpty()) {
                 int[] command = FCommandQueue.remove(0);
                 neueRichtung(command[0], command[1]);
@@ -138,7 +143,7 @@ public class Schlange {
     public int getKopfY() {
         return FKopfY;
     }
-    
+
     public int getLength() {
         return FKoerper.size();
     }
