@@ -31,10 +31,12 @@ public class SnakeGame extends AbstractGame {
     Schlange FSchlange1;
     Schlange FSchlange2;
     Keksdose FKeksdose;
+    BumperCollection FBumperListe;
 
     private int AnzahlKekse = 4;
+    private int AnzahlBumper = 4;
     private boolean FLebt1, FLebt2;
-    private String FUrsache1, FUrsache2; 
+    private String FUrsache1, FUrsache2;
     private String FWinnerText;
 
     // Implementierung
@@ -44,6 +46,7 @@ public class SnakeGame extends AbstractGame {
         FSchlange1 = new Schlange(10, 10, 1, 0, new Color(124, 158, 178));
         FSchlange2 = new Schlange(10, 40, 1, 0, new Color(204, 113, 120));
         FKeksdose = new Keksdose();
+        FBumperListe = new BumperCollection();
         FZustand = ZUSTAND_SPLASH_SCREEN;
     }
 
@@ -60,6 +63,12 @@ public class SnakeGame extends AbstractGame {
         for (int i = 0; i < AnzahlKekse; i++) {
             neuerKeks();
         }
+
+        FBumperListe.init();
+        for (int i = 0; i < AnzahlBumper; i++) {
+            neuerBumper();
+        }
+
     }
 
     @Override
@@ -92,6 +101,10 @@ public class SnakeGame extends AbstractGame {
                         FKeksdose.entferneKeks(k);
                         neuerKeks();
                     }
+
+                    if (FBumperListe.istBumper(FSchlange1.getKopfX(), FSchlange1.getKopfY())) {
+                        FSchlange1.linksDrehen();
+                    }
                 }
 
                 if (FLebt2 && FSchlange2.calc(tickCount)) {
@@ -114,6 +127,10 @@ public class SnakeGame extends AbstractGame {
                         FSchlange2.wachsen(1);
                         FKeksdose.entferneKeks(k);
                         neuerKeks();
+                    }
+                    
+                    if (FBumperListe.istBumper(FSchlange2.getKopfX(), FSchlange2.getKopfY())) {
+                        FSchlange2.linksDrehen();
                     }
                 }
 
@@ -148,6 +165,7 @@ public class SnakeGame extends AbstractGame {
                 FSchlange1.draw(graphics);
                 FSchlange2.draw(graphics);
                 FKeksdose.draw(graphics);
+                FBumperListe.draw(graphics);
             }
             break;
             case ZUSTAND_SPLASH_SCREEN: {
@@ -225,6 +243,15 @@ public class SnakeGame extends AbstractGame {
         }
     }
 
+    private void neuerBumper() {
+        int LX, LY;
+        do {
+            LX = (int) (Math.random() * Spielfeld.WIDTH);
+            LY = (int) (Math.random() * Spielfeld.HEIGHT);
+        } while (FFeld.istWand(LX, LY));
+        FBumperListe.addBumper(LX, LY, Color.blue);
+    }
+
     private void neuerKeks() {
         int LX, LY;
         do {
@@ -233,6 +260,7 @@ public class SnakeGame extends AbstractGame {
         } while (FSchlange1.istSchlange(LX, LY)
                 || FSchlange2.istSchlange(LX, LY)
                 || FFeld.istWand(LX, LY)
+                || FBumperListe.istBumper(LX, LY)
                 || (null != FKeksdose.getKeksAtPosition(LX, LY)));
         FKeksdose.addKeks(new Keks(LX, LY, new Color(241, 196, 15)));
     }
@@ -259,6 +287,7 @@ public class SnakeGame extends AbstractGame {
         FSchlange1.draw(g);
         FSchlange2.draw(g);
         FKeksdose.draw(g);
+        FBumperListe.draw(g);
         g.setColor(new Color(0, 0, 0, 128));
         g.fillRect(0, 0, Spielfeld.WIDTH * 10, Spielfeld.HEIGHT * 10);
         g.setColor(C_LIGHT);

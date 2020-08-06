@@ -153,4 +153,24 @@ public class Schlange {
     public int getLength() {
         return FKoerper.size();
     }
+    
+    public void linksDrehen() {
+        if (FVX == 1)
+        {
+            FVX = 0;
+            FVY = 1;
+        } else if (FVX == -1)
+        {
+            FVX = 0;
+            FVY = -1;
+        } else if (FVY == 1)
+        {
+            FVX = -1;
+            FVY = 0;
+        } else
+        {
+            FVX = 1;
+            FVY = 0;
+        }
+    }
 }
