@@ -30,6 +30,7 @@ public class Schlange {
         FVX = i_vx;
         FVY = i_vy;
         FKoerper.clear();
+        FCommandQueue.clear();
     }
 
     public boolean calc(int tickCount) {

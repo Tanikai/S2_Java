@@ -8,7 +8,6 @@ import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
-import java.util.concurrent.ThreadLocalRandom;
 
 public class SnakeGame extends AbstractGame {
 
@@ -33,8 +32,10 @@ public class SnakeGame extends AbstractGame {
     Schlange FSchlange2;
     Keksdose FKeksdose;
 
+    private int AnzahlKekse = 4;
     boolean FLebt1, FLebt2;
     int FScore1, FScore2;
+    private String FWinnerText;
 
     // Implementierung
     public SnakeGame(Frame core) {
@@ -56,7 +57,7 @@ public class SnakeGame extends AbstractGame {
         FSchlange2.wachsen(START_LENGTH);
         FLebt2 = true;
         FKeksdose.init();
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < AnzahlKekse; i++) {
             neuerKeks();
         }
     }
@@ -114,6 +115,18 @@ public class SnakeGame extends AbstractGame {
                 if (!(FLebt1 || FLebt2)) {
                     FScore1 = FSchlange1.getLength() - START_LENGTH;
                     FScore2 = FSchlange2.getLength() - START_LENGTH;
+                    if (FScore1 == FScore2)
+                    {
+                        FWinnerText = "Unentschieden!";
+                    }
+                    else if (FScore1 > FScore2)
+                    {
+                        FWinnerText = "Schlange 1 hat gewonnen!";
+                    }
+                    else
+                    {
+                        FWinnerText = "Schlange 2 hat gewonnen!";
+                    }
                     FZustand = ZUSTAND_GAME_OVER;
                 }
             }
@@ -172,9 +185,6 @@ public class SnakeGame extends AbstractGame {
                             FSchlange1.queueCommand(0, 1);
                         }
                         break;
-                    }
-
-                    switch (e.getKeyCode()) {
                         case KeyEvent.VK_D: {
                             FSchlange2.queueCommand(1, 0);
                         }
@@ -223,6 +233,7 @@ public class SnakeGame extends AbstractGame {
             LX = (int) (Math.random() * Spielfeld.WIDTH);
             LY = (int) (Math.random() * Spielfeld.HEIGHT);
         } while (FSchlange1.istSchlange(LX, LY)
+                || FSchlange2.istSchlange(LX, LY)
                 || FFeld.istWand(LX, LY)
                 || (null != FKeksdose.getKeksAtPosition(LX, LY)));
         FKeksdose.addKeks(new Keks(LX, LY, new Color(241, 196, 15)));
@@ -256,8 +267,9 @@ public class SnakeGame extends AbstractGame {
         g.setFont(new Font("Arial", Font.PLAIN, 30));
         g.drawString("Game over!", 100, 100);
         g.drawString("Press [SPACE] to return to the title screen.", 100, 150);
-        g.drawString("Score Schlange 1: " + FScore1, 100, 200);
-        g.drawString("Score Schlange 2: " + FScore2, 100, 250);
+        g.drawString(FWinnerText, 100, 200);
+        g.drawString("Score Schlange 1: " + FScore1, 100, 250);
+        g.drawString("Score Schlange 2: " + FScore2, 100, 300);
     }
 
     public void drawScore(Graphics g) {
