@@ -23,18 +23,25 @@ public class SnakeGame extends AbstractGame {
     private final Image IMG_SPLASH = Toolkit.getDefaultToolkit().getImage(SnakeGame.class.getResource("/splashscreen.png"));
     private final Image IMG_SNAKE = Toolkit.getDefaultToolkit().getImage(SnakeGame.class.getResource("/catsnake.png"));
 
+    private final int START_LENGTH = 9;
+
     // Variablen
     private int FZustand;
 
     Spielfeld FFeld;
     Schlange FSchlange1;
+    Schlange FSchlange2;
     Keksdose FKeksdose;
+
+    boolean FLebt1, FLebt2;
+    int FScore1, FScore2;
 
     // Implementierung
     public SnakeGame(Frame core) {
         super(core, 800, 600);
         FFeld = new Spielfeld();
         FSchlange1 = new Schlange(10, 10, 1, 0, new Color(124, 158, 178));
+        FSchlange2 = new Schlange(10, 40, 1, 0, new Color(204, 113, 120));
         FKeksdose = new Keksdose();
         FZustand = ZUSTAND_SPLASH_SCREEN;
     }
@@ -43,9 +50,13 @@ public class SnakeGame extends AbstractGame {
     public void init() {
         FFeld.init();
         FSchlange1.init(10, 10, 1, 0);
-        FSchlange1.wachsen(9);
+        FSchlange1.wachsen(START_LENGTH);
+        FLebt1 = true;
+        FSchlange2.init(10, 40, 1, 0);
+        FSchlange2.wachsen(START_LENGTH);
+        FLebt2 = true;
         FKeksdose.init();
-        for (int i = 0; i < 100; i++) {
+        for (int i = 0; i < 4; i++) {
             neuerKeks();
         }
     }
@@ -59,15 +70,15 @@ public class SnakeGame extends AbstractGame {
     public void calc(int tickCount) {
         switch (FZustand) {
             case ZUSTAND_GAME_RUNNING: {
-                if (FSchlange1.calc(tickCount)) {
+                if (FLebt1 && FSchlange1.calc(tickCount)) {
                     if (FFeld.istWand(FSchlange1.getKopfX(), FSchlange1.getKopfY())) {
-                        System.out.println("Game Over: Collided with wall at " + FSchlange1.getKopfX() + "/" + FSchlange1.getKopfY());
-                        FZustand = ZUSTAND_GAME_OVER;
-
+                        FLebt1 = false;
                     }
                     if (FSchlange1.istKoerper(FSchlange1.getKopfX(), FSchlange1.getKopfY())) {
-                        FZustand = ZUSTAND_GAME_OVER;
-
+                        FLebt1 = false;
+                    }
+                    if (FSchlange2.istKoerper(FSchlange1.getKopfX(), FSchlange1.getKopfY())) {
+                        FLebt1 = false;
                     }
 
                     // Kollision mit Keks checken
@@ -77,6 +88,33 @@ public class SnakeGame extends AbstractGame {
                         FKeksdose.entferneKeks(k);
                         neuerKeks();
                     }
+                }
+
+                if (FLebt2 && FSchlange2.calc(tickCount)) {
+                    if (FFeld.istWand(FSchlange2.getKopfX(), FSchlange2.getKopfY())) {
+                        FLebt2 = false;
+
+                    }
+                    if (FSchlange1.istKoerper(FSchlange2.getKopfX(), FSchlange2.getKopfY())) {
+                        FLebt2 = false;
+                    }
+                    if (FSchlange2.istKoerper(FSchlange2.getKopfX(), FSchlange2.getKopfY())) {
+                        FLebt2 = false;
+                    }
+
+                    // Kollision mit Keks checken
+                    Keks k = FKeksdose.getKeksAtPosition(FSchlange2.getKopfX(), FSchlange2.getKopfY());
+                    if (k != null) {
+                        FSchlange2.wachsen(1);
+                        FKeksdose.entferneKeks(k);
+                        neuerKeks();
+                    }
+                }
+
+                if (!(FLebt1 || FLebt2)) {
+                    FScore1 = FSchlange1.getLength() - START_LENGTH;
+                    FScore2 = FSchlange2.getLength() - START_LENGTH;
+                    FZustand = ZUSTAND_GAME_OVER;
                 }
             }
             break;
@@ -97,6 +135,7 @@ public class SnakeGame extends AbstractGame {
             case ZUSTAND_GAME_RUNNING: {
                 FFeld.draw(graphics);
                 FSchlange1.draw(graphics);
+                FSchlange2.draw(graphics);
                 FKeksdose.draw(graphics);
             }
             break;
@@ -131,6 +170,25 @@ public class SnakeGame extends AbstractGame {
                         break;
                         case KeyEvent.VK_DOWN: {
                             FSchlange1.queueCommand(0, 1);
+                        }
+                        break;
+                    }
+
+                    switch (e.getKeyCode()) {
+                        case KeyEvent.VK_D: {
+                            FSchlange2.queueCommand(1, 0);
+                        }
+                        break;
+                        case KeyEvent.VK_A: {
+                            FSchlange2.queueCommand(-1, 0);
+                        }
+                        break;
+                        case KeyEvent.VK_W: {
+                            FSchlange2.queueCommand(0, -1);
+                        }
+                        break;
+                        case KeyEvent.VK_S: {
+                            FSchlange2.queueCommand(0, 1);
                         }
                         break;
                     }
@@ -190,6 +248,7 @@ public class SnakeGame extends AbstractGame {
     public void drawGameOver(Graphics g) {
         FFeld.draw(g);
         FSchlange1.draw(g);
+        FSchlange2.draw(g);
         FKeksdose.draw(g);
         g.setColor(new Color(0, 0, 0, 128));
         g.fillRect(0, 0, Spielfeld.WIDTH * 10, Spielfeld.HEIGHT * 10);
@@ -197,5 +256,11 @@ public class SnakeGame extends AbstractGame {
         g.setFont(new Font("Arial", Font.PLAIN, 30));
         g.drawString("Game over!", 100, 100);
         g.drawString("Press [SPACE] to return to the title screen.", 100, 150);
+        g.drawString("Score Schlange 1: " + FScore1, 100, 200);
+        g.drawString("Score Schlange 2: " + FScore2, 100, 250);
+    }
+
+    public void drawScore(Graphics g) {
+
     }
 }

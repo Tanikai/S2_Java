@@ -137,4 +137,8 @@ public class Schlange {
     public int getKopfY() {
         return FKopfY;
     }
+    
+    public int getLength() {
+        return FKoerper.size();
+    }
 }
