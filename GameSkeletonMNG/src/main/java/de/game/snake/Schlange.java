@@ -36,8 +36,7 @@ public class Schlange {
         wachsen(FStartSize);
     }
 
-    public boolean calc(int tickCount) {
-        // ToDo: Geschwindigkeit dynamisch anhand der Länge setzen        
+    public boolean calc(int tickCount) {     
         int LSpeed = 5 - (FKoerper.size() / 5);
         if (LSpeed < 1) {
             LSpeed = 1;

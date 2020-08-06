@@ -33,7 +33,8 @@ public class SnakeGame extends AbstractGame {
     Keksdose FKeksdose;
 
     private int AnzahlKekse = 4;
-    boolean FLebt1, FLebt2;
+    private boolean FLebt1, FLebt2;
+    private String FUrsache1, FUrsache2; 
     private String FWinnerText;
 
     // Implementierung
@@ -51,8 +52,10 @@ public class SnakeGame extends AbstractGame {
         FFeld.init();
         FSchlange1.init(10, 10, 1, 0, START_LENGTH);
         FLebt1 = true;
+        FUrsache1 = "";
         FSchlange2.init(10, 40, 1, 0, START_LENGTH);
         FLebt2 = true;
+        FUrsache2 = "";
         FKeksdose.init();
         for (int i = 0; i < AnzahlKekse; i++) {
             neuerKeks();
@@ -70,12 +73,15 @@ public class SnakeGame extends AbstractGame {
             case ZUSTAND_GAME_RUNNING: {
                 if (FLebt1 && FSchlange1.calc(tickCount)) {
                     if (FFeld.istWand(FSchlange1.getKopfX(), FSchlange1.getKopfY())) {
+                        FUrsache1 = "(Gegen Wand gelaufen)";
                         FLebt1 = false;
                     }
                     if (FSchlange1.istKoerper(FSchlange1.getKopfX(), FSchlange1.getKopfY())) {
+                        FUrsache1 = "(Gegen sich selbst gelaufen)";
                         FLebt1 = false;
                     }
                     if (FSchlange2.istKoerper(FSchlange1.getKopfX(), FSchlange1.getKopfY())) {
+                        FUrsache1 = "(Gegen Schlange 2 gelaufen)";
                         FLebt1 = false;
                     }
 
@@ -90,13 +96,15 @@ public class SnakeGame extends AbstractGame {
 
                 if (FLebt2 && FSchlange2.calc(tickCount)) {
                     if (FFeld.istWand(FSchlange2.getKopfX(), FSchlange2.getKopfY())) {
+                        FUrsache2 = "(Gegen Wand gelaufen)";
                         FLebt2 = false;
-
                     }
                     if (FSchlange1.istKoerper(FSchlange2.getKopfX(), FSchlange2.getKopfY())) {
+                        FUrsache2 = "(Gegen Schlange 1 gelaufen)";
                         FLebt2 = false;
                     }
                     if (FSchlange2.istKoerper(FSchlange2.getKopfX(), FSchlange2.getKopfY())) {
+                        FUrsache2 = "(Gegen sich selbst gelaufen)";
                         FLebt2 = false;
                     }
 
@@ -258,8 +266,8 @@ public class SnakeGame extends AbstractGame {
         g.drawString("Game over!", 100, 100);
         g.drawString("Press [SPACE] to return to the title screen.", 100, 150);
         g.drawString(FWinnerText, 100, 200);
-        g.drawString("Score Schlange 1: " + FSchlange1.getScore(), 100, 250);
-        g.drawString("Score Schlange 2: " + FSchlange2.getScore(), 100, 300);
+        g.drawString("Score S1: " + FSchlange1.getScore() + " " + FUrsache1, 100, 250);
+        g.drawString("Score S2: " + FSchlange2.getScore() + " " + FUrsache2, 100, 300);
     }
 
     public void drawScore(Graphics g) {
