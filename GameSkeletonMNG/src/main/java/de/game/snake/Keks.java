@@ -15,7 +15,7 @@ public class Keks {
         this.FY = i_y;
         FColor = i_Color;
     }
-    
+
     public int getFX() {
         return FX;
     }
@@ -23,9 +23,9 @@ public class Keks {
     public int getFY() {
         return FY;
     }
-    
+
     public void draw(Graphics g) {
         g.setColor(FColor);
-        g.fillRect(FX*10, FY*10, 10, 10);
+        g.fillRect(FX * 10, FY * 10, 10, 10);
     }
 }

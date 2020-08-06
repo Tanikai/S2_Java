@@ -9,6 +9,7 @@ public class Schlange {
     // Variablen
     private int FKopfX, FKopfY;
     private int FVX, FVY;
+    private int FStartSize;
     private Color FColor;
     private ArrayList<SchlangenWirbel> FKoerper;
     private ArrayList<int[]> FCommandQueue;
@@ -24,13 +25,15 @@ public class Schlange {
         FCommandQueue = new ArrayList<>();
     }
 
-    public void init(int i_x, int i_y, int i_vx, int i_vy) {
+    public void init(int i_x, int i_y, int i_vx, int i_vy, int i_size) {
         FKopfX = i_x;
         FKopfY = i_y;
         FVX = i_vx;
         FVY = i_vy;
         FKoerper.clear();
         FCommandQueue.clear();
+        FStartSize = i_size;
+        wachsen(FStartSize);
     }
 
     public boolean calc(int tickCount) {
@@ -142,6 +145,10 @@ public class Schlange {
 
     public int getKopfY() {
         return FKopfY;
+    }
+
+    public int getScore() {
+        return FKoerper.size() - FStartSize;
     }
 
     public int getLength() {

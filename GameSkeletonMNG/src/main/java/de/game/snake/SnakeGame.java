@@ -34,7 +34,6 @@ public class SnakeGame extends AbstractGame {
 
     private int AnzahlKekse = 4;
     boolean FLebt1, FLebt2;
-    int FScore1, FScore2;
     private String FWinnerText;
 
     // Implementierung
@@ -50,11 +49,9 @@ public class SnakeGame extends AbstractGame {
     @Override
     public void init() {
         FFeld.init();
-        FSchlange1.init(10, 10, 1, 0);
-        FSchlange1.wachsen(START_LENGTH);
+        FSchlange1.init(10, 10, 1, 0, START_LENGTH);
         FLebt1 = true;
-        FSchlange2.init(10, 40, 1, 0);
-        FSchlange2.wachsen(START_LENGTH);
+        FSchlange2.init(10, 40, 1, 0, START_LENGTH);
         FLebt2 = true;
         FKeksdose.init();
         for (int i = 0; i < AnzahlKekse; i++) {
@@ -113,18 +110,11 @@ public class SnakeGame extends AbstractGame {
                 }
 
                 if (!(FLebt1 || FLebt2)) {
-                    FScore1 = FSchlange1.getLength() - START_LENGTH;
-                    FScore2 = FSchlange2.getLength() - START_LENGTH;
-                    if (FScore1 == FScore2)
-                    {
+                    if (FSchlange1.getScore() == FSchlange2.getScore()) {
                         FWinnerText = "Unentschieden!";
-                    }
-                    else if (FScore1 > FScore2)
-                    {
+                    } else if (FSchlange1.getScore() > FSchlange2.getScore()) {
                         FWinnerText = "Schlange 1 hat gewonnen!";
-                    }
-                    else
-                    {
+                    } else {
                         FWinnerText = "Schlange 2 hat gewonnen!";
                     }
                     FZustand = ZUSTAND_GAME_OVER;
@@ -268,8 +258,8 @@ public class SnakeGame extends AbstractGame {
         g.drawString("Game over!", 100, 100);
         g.drawString("Press [SPACE] to return to the title screen.", 100, 150);
         g.drawString(FWinnerText, 100, 200);
-        g.drawString("Score Schlange 1: " + FScore1, 100, 250);
-        g.drawString("Score Schlange 2: " + FScore2, 100, 300);
+        g.drawString("Score Schlange 1: " + FSchlange1.getScore(), 100, 250);
+        g.drawString("Score Schlange 2: " + FSchlange2.getScore(), 100, 300);
     }
 
     public void drawScore(Graphics g) {
