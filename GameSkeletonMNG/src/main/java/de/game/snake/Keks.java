@@ -7,14 +7,15 @@ public class Keks {
 
     // Variablen
     private int FX, FY;
-    private final Color C_KEKS  = new Color(241, 196, 15);
+    private Color FColor;
 
     // Methoden
-    public Keks(int FX, int FY) {
-        this.FX = FX;
-        this.FY = FY;
+    public Keks(int i_x, int i_y, Color i_Color) {
+        this.FX = i_x;
+        this.FY = i_y;
+        FColor = i_Color;
     }
-
+    
     public int getFX() {
         return FX;
     }
@@ -22,9 +23,9 @@ public class Keks {
     public int getFY() {
         return FY;
     }
-
+    
     public void draw(Graphics g) {
-        g.setColor(C_KEKS);
+        g.setColor(FColor);
         g.fillRect(FX*10, FY*10, 10, 10);
     }
 }

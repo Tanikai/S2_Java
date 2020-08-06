@@ -11,8 +11,9 @@ public class Schlange {
     private int FVX, FVY;
     private Color FColor;
     private ArrayList<SchlangenWirbel> FKoerper;
+    private ArrayList<int[]> FCommandQueue;
 
-    // Implementierung
+    // Methoden
     public Schlange(int i_x, int i_y, int i_vx, int i_vy, Color i_color) {
         FKopfX = i_x;
         FKopfY = i_y;
@@ -20,8 +21,7 @@ public class Schlange {
         FVY = i_vy;
         FColor = i_color;
         FKoerper = new ArrayList<>();
-
-        System.out.println("VX/VY: " + FVX + "/" + FVY);
+        FCommandQueue = new ArrayList<>();
     }
 
     public void init(int i_x, int i_y, int i_vx, int i_vy) {
@@ -30,13 +30,15 @@ public class Schlange {
         FVX = i_vx;
         FVY = i_vy;
         FKoerper.clear();
-        System.out.println("Schlange init");
     }
 
     public boolean calc(int tickCount) {
-
         // ToDo: Geschwindigkeit dynamisch anhand der Länge setzen        
         if (0 == tickCount % 5) {
+            if (!FCommandQueue.isEmpty()) {
+                int[] command = FCommandQueue.remove(0);
+                neueRichtung(command[0], command[1]);
+            }
 
             // Körper der Schlange nachziehen
             if (!FKoerper.isEmpty()) {
@@ -53,33 +55,45 @@ public class Schlange {
             FKopfX += FVX;
             FKopfY += FVY;
 
-            // Kollision mit Wand prüfen
-            checkRandCollision();
+            // Kollision mit Portal prüfen
+            istPortal();
 
             return true;
         } else {
             return false;
         }
-
     }
 
-    public void draw(Graphics g) {       
+    public void draw(Graphics g) {
         // Schlangenkörper malen
         for (SchlangenWirbel sw : FKoerper) {
             sw.draw(g);
         }
-        
+
         // Schlangenkopf malen
         g.setColor(FColor);
         g.fillRect(FKopfX * 10, FKopfY * 10, 10, 10);
     }
 
-    public void neueRichtung(int i_vX, int i_vY) {
-        FVX = i_vX;
-        FVY = i_vY;
+    public void queueCommand(int i_vX, int i_vY) {
+        if (FCommandQueue.size() < 6) {
+            int[] c = new int[2];
+            c[0] = i_vX;
+            c[1] = i_vY;
+            FCommandQueue.add(c);
+        }
     }
 
-    public void checkRandCollision() {
+    public void neueRichtung(int i_vX, int i_vY) {
+
+        if (!((i_vX == -FVX) || (i_vY == -FVY))) {
+            FVX = i_vX;
+            FVY = i_vY;
+        }
+
+    }
+
+    public void istPortal() {
         if (FKopfX >= Spielfeld.WIDTH) {
             FKopfX = 0;
         } else if (FKopfX < 0) {
@@ -93,16 +107,8 @@ public class Schlange {
         }
     }
 
-    public boolean checkOwnCollision() {
-        boolean LCollides = false;
-        for (SchlangenWirbel wirbel : FKoerper) {
-            if ((wirbel.getFX() == FKopfX) && (wirbel.getFY() == FKopfY)) {
-                LCollides = true;
-                System.out.println("Collided with own body: " + FKopfX + "/" + FKopfY);
-                break;
-            }
-        }
-        return LCollides;
+    public boolean istSchlange(int x, int y) {
+        return ((FKopfX == x) && (FKopfY == y)) || istKoerper(x, y);
     }
 
     public boolean istKoerper(int x, int y) {

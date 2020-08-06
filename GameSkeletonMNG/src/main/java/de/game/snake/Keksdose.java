@@ -1,38 +1,38 @@
 package de.game.snake;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.util.ArrayList;
-import java.util.concurrent.ThreadLocalRandom;
 
 public class Keksdose {
 
     // Variablen
     private ArrayList<Keks> FKekse;
-    private int FMaxKekse;
 
     // Methoden
-    public Keksdose(int i_max) {
-        FMaxKekse = i_max;
+    public Keksdose() {
         FKekse = new ArrayList<>();
     }
 
     public void init() {
         FKekse.clear();
-        for (int i = 0; i < FMaxKekse; i++) {
-            newKeks();
-        }
     }
 
-    public void newKeks() {
-        int LX = ThreadLocalRandom.current().nextInt(1, Spielfeld.WIDTH);
-        int LY = ThreadLocalRandom.current().nextInt(2, Spielfeld.HEIGHT);
-        FKekse.add(new Keks(LX, LY));
+    public void addKeks(Keks i_Keks) {
+        FKekse.add(i_Keks);
     }
 
-    public void calc() {
-        if (FKekse.size() < FMaxKekse) {
-            newKeks();
+    public void entferneKeks(Keks i_k) {
+        FKekse.remove(i_k);
+    }
+
+    public Keks getKeksAtPosition(int x, int y) {
+        for (Keks kek : FKekse) {
+            if ((kek.getFX() == x) && (kek.getFY() == y)) {
+                return kek;
+            }
         }
+        return null;
     }
 
     public void draw(Graphics g) {
@@ -41,14 +41,4 @@ public class Keksdose {
         }
     }
 
-    public boolean istKeks(int i_x, int i_y) {
-        for (Keks kek : FKekse) {
-            if ((kek.getFX() == i_x) && (kek.getFY() == i_y)) {
-                FKekse.remove(kek);
-                newKeks();
-                return true;
-            }
-        }
-        return false;
-    }
 }
