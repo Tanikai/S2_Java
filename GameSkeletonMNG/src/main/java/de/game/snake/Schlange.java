@@ -39,12 +39,15 @@ public class Schlange {
         if (0 == tickCount % 5) {
 
             // Körper der Schlange nachziehen
-            int LLastIndex = FKoerper.size() - 1;
-            FKoerper.get(LLastIndex).setFX(FKopfX);
-            FKoerper.get(LLastIndex).setFY(FKopfY);
-            // Wirbel an den Anfang setzen
-            SchlangenWirbel LLastElement = FKoerper.remove(LLastIndex);
-            FKoerper.add(0, LLastElement);
+            if (!FKoerper.isEmpty()) {
+                int LLastIndex = FKoerper.size() - 1;
+
+                FKoerper.get(LLastIndex).setFX(FKopfX);
+                FKoerper.get(LLastIndex).setFY(FKopfY);
+                // Wirbel an den Anfang setzen
+                SchlangenWirbel LLastElement = FKoerper.remove(LLastIndex);
+                FKoerper.add(0, LLastElement);
+            }
 
             // Kopf bewegen
             FKopfX += FVX;
@@ -60,13 +63,15 @@ public class Schlange {
 
     }
 
-    public void draw(Graphics g) {
-        g.setColor(FColor);
-        g.fillRect(FKopfX * 10, FKopfY * 10, 10, 10);
-
+    public void draw(Graphics g) {       
+        // Schlangenkörper malen
         for (SchlangenWirbel sw : FKoerper) {
             sw.draw(g);
         }
+        
+        // Schlangenkopf malen
+        g.setColor(FColor);
+        g.fillRect(FKopfX * 10, FKopfY * 10, 10, 10);
     }
 
     public void neueRichtung(int i_vX, int i_vY) {
