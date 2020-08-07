@@ -134,6 +134,9 @@ public class SnakeGame extends AbstractGame {
                     }
                 }
 
+                // Erst Game Over, wenn beide Schlangen gestorben sind
+                // -> Comeback-Potential wenn die verlierende Schlange genug
+                //    Punkte sammelt
                 if (!(FLebt1 || FLebt2)) {
                     if (FSchlange1.getScore() == FSchlange2.getScore()) {
                         FWinnerText = "Unentschieden!";
@@ -159,6 +162,12 @@ public class SnakeGame extends AbstractGame {
 
     @Override
     public void draw(Graphics graphics) {
+        /**
+         * Notiz vom Autor:
+         * Ich habe mal die Funktion, dass der Score während des Spiels angezeigt
+         * wird, nicht implementiert, da es dadurch spannender wird. Der Score
+         * wird am Ende angezeigt, wenn beide Schlangen gestorben sind.
+         */
         switch (FZustand) {
             case ZUSTAND_GAME_RUNNING: {
                 FFeld.draw(graphics);
