@@ -7,13 +7,15 @@ public class Keks {
 
     // Variablen
     private int FX, FY;
+    private int FZucker;
     private Color FColor;
 
     // Methoden
-    public Keks(int i_x, int i_y, Color i_Color) {
+    public Keks(int i_x, int i_y, Color i_Color, int i_Zucker) {
         this.FX = i_x;
         this.FY = i_y;
         FColor = i_Color;
+        FZucker = i_Zucker;
     }
 
     public int getFX() {
@@ -22,6 +24,10 @@ public class Keks {
 
     public int getFY() {
         return FY;
+    }
+    
+    public int getZucker() {
+        return FZucker;
     }
 
     public void draw(Graphics g) {

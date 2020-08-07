@@ -32,6 +32,7 @@ public class SnakeGame extends AbstractGame {
     Schlange FSchlange2;
     Keksdose FKeksdose;
     BumperCollection FBumperListe;
+    Warpfeld FWarpfeld;
 
     private int AnzahlKekse = 4;
     private int AnzahlBumper = 4;
@@ -47,6 +48,7 @@ public class SnakeGame extends AbstractGame {
         FSchlange2 = new Schlange(10, 40, 1, 0, new Color(204, 113, 120));
         FKeksdose = new Keksdose();
         FBumperListe = new BumperCollection();
+        FWarpfeld = new Warpfeld(0, 0, 0, 0);
         FZustand = ZUSTAND_SPLASH_SCREEN;
     }
 
@@ -59,16 +61,19 @@ public class SnakeGame extends AbstractGame {
         FSchlange2.init(10, 40, 1, 0, START_LENGTH);
         FLebt2 = true;
         FUrsache2 = "";
-        FKeksdose.init();
-        for (int i = 0; i < AnzahlKekse; i++) {
-            neuerKeks();
-        }
+
+        FWarpfeld.init(20, 20, 50, 50);
 
         FBumperListe.init();
         for (int i = 0; i < AnzahlBumper; i++) {
             neuerBumper();
         }
 
+        // Kekse als letztes generieren! -> Position der Kekse
+        FKeksdose.init();
+        for (int i = 0; i < AnzahlKekse; i++) {
+            neuerKeks();
+        }
     }
 
     @Override
@@ -97,13 +102,19 @@ public class SnakeGame extends AbstractGame {
                     // Kollision mit Keks checken
                     Keks k = FKeksdose.getKeksAtPosition(FSchlange1.getKopfX(), FSchlange1.getKopfY());
                     if (k != null) {
-                        FSchlange1.wachsen(1);
+                        FSchlange1.wachsen(k.getZucker());
                         FKeksdose.entferneKeks(k);
                         neuerKeks();
                     }
 
                     if (FBumperListe.istBumper(FSchlange1.getKopfX(), FSchlange1.getKopfY())) {
                         FSchlange1.linksDrehen();
+                    }
+
+                    if (FWarpfeld.istWarpfeld1(FSchlange1.getKopfX(), FSchlange1.getKopfY())) {
+                        FSchlange1.teleportieren(FWarpfeld.getFPortalX2(), FWarpfeld.getFPortalY2());
+                    } else if (FWarpfeld.istWarpfeld2(FSchlange1.getKopfX(), FSchlange1.getKopfY())) {
+                        FSchlange1.teleportieren(FWarpfeld.getFPortalX1(), FWarpfeld.getFPortalY1());
                     }
                 }
 
@@ -124,13 +135,19 @@ public class SnakeGame extends AbstractGame {
                     // Kollision mit Keks checken
                     Keks k = FKeksdose.getKeksAtPosition(FSchlange2.getKopfX(), FSchlange2.getKopfY());
                     if (k != null) {
-                        FSchlange2.wachsen(1);
+                        FSchlange2.wachsen(k.getZucker());
                         FKeksdose.entferneKeks(k);
                         neuerKeks();
                     }
-                    
+
                     if (FBumperListe.istBumper(FSchlange2.getKopfX(), FSchlange2.getKopfY())) {
                         FSchlange2.linksDrehen();
+                    }
+
+                    if (FWarpfeld.istWarpfeld1(FSchlange2.getKopfX(), FSchlange2.getKopfY())) {
+                        FSchlange2.teleportieren(FWarpfeld.getFPortalX2(), FWarpfeld.getFPortalY2());
+                    } else if (FWarpfeld.istWarpfeld2(FSchlange2.getKopfX(), FSchlange2.getKopfY())) {
+                        FSchlange2.teleportieren(FWarpfeld.getFPortalX1(), FWarpfeld.getFPortalY1());
                     }
                 }
 
@@ -163,10 +180,10 @@ public class SnakeGame extends AbstractGame {
     @Override
     public void draw(Graphics graphics) {
         /**
-         * Notiz vom Autor:
-         * Ich habe mal die Funktion, dass der Score während des Spiels angezeigt
-         * wird, nicht implementiert, da es dadurch spannender wird. Der Score
-         * wird am Ende angezeigt, wenn beide Schlangen gestorben sind.
+         * Notiz vom Autor: Ich habe mal die Funktion, dass der Score während
+         * des Spiels angezeigt wird, nicht implementiert, da es dadurch
+         * spannender wird. Der Score wird am Ende angezeigt, wenn beide
+         * Schlangen gestorben sind.
          */
         switch (FZustand) {
             case ZUSTAND_GAME_RUNNING: {
@@ -175,6 +192,7 @@ public class SnakeGame extends AbstractGame {
                 FSchlange2.draw(graphics);
                 FKeksdose.draw(graphics);
                 FBumperListe.draw(graphics);
+                FWarpfeld.draw(graphics);
             }
             break;
             case ZUSTAND_SPLASH_SCREEN: {
@@ -257,8 +275,10 @@ public class SnakeGame extends AbstractGame {
         do {
             LX = (int) (Math.random() * Spielfeld.WIDTH);
             LY = (int) (Math.random() * Spielfeld.HEIGHT);
-        } while (FFeld.istWand(LX, LY));
-        FBumperListe.addBumper(LX, LY, Color.blue);
+        } while (FFeld.istWand(LX, LY)
+                || FWarpfeld.istWarpfeld1(LX, LY)
+                || FWarpfeld.istWarpfeld2(LX, LY));
+        FBumperListe.addBumper(LX, LY, Color.magenta);
     }
 
     private void neuerKeks() {
@@ -270,8 +290,12 @@ public class SnakeGame extends AbstractGame {
                 || FSchlange2.istSchlange(LX, LY)
                 || FFeld.istWand(LX, LY)
                 || FBumperListe.istBumper(LX, LY)
+                || FWarpfeld.istWarpfeld1(LX, LY)
+                || FWarpfeld.istWarpfeld2(LX, LY)
                 || (null != FKeksdose.getKeksAtPosition(LX, LY)));
-        FKeksdose.addKeks(new Keks(LX, LY, new Color(241, 196, 15)));
+
+        int LZucker = (int) (1 + Math.random() * 5);
+        FKeksdose.addKeks(new Keks(LX, LY, new Color(241 - LZucker * 25, 196, 15 + LZucker * 10), LZucker));
     }
 
     public void drawSplash(Graphics g) {
@@ -297,6 +321,7 @@ public class SnakeGame extends AbstractGame {
         FSchlange2.draw(g);
         FKeksdose.draw(g);
         FBumperListe.draw(g);
+        FWarpfeld.draw(g);
         g.setColor(new Color(0, 0, 0, 128));
         g.fillRect(0, 0, Spielfeld.WIDTH * 10, Spielfeld.HEIGHT * 10);
         g.setColor(C_LIGHT);
@@ -306,9 +331,5 @@ public class SnakeGame extends AbstractGame {
         g.drawString(FWinnerText, 100, 200);
         g.drawString("Score S1: " + FSchlange1.getScore() + " " + FUrsache1, 100, 250);
         g.drawString("Score S2: " + FSchlange2.getScore() + " " + FUrsache2, 100, 300);
-    }
-
-    public void drawScore(Graphics g) {
-
     }
 }

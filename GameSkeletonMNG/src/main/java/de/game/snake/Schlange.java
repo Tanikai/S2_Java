@@ -36,7 +36,7 @@ public class Schlange {
         wachsen(FStartSize);
     }
 
-    public boolean calc(int tickCount) {     
+    public boolean calc(int tickCount) {
         int LSpeed = 5 - (FKoerper.size() / 5);
         if (LSpeed < 1) {
             LSpeed = 1;
@@ -93,7 +93,6 @@ public class Schlange {
     }
 
     public void neueRichtung(int i_vX, int i_vY) {
-
         if (!((i_vX == -FVX) || (i_vY == -FVY))) {
             FVX = i_vX;
             FVY = i_vY;
@@ -153,24 +152,26 @@ public class Schlange {
     public int getLength() {
         return FKoerper.size();
     }
-    
+
     public void linksDrehen() {
-        if (FVX == 1)
-        {
+        if (FVX == 1) {
             FVX = 0;
             FVY = 1;
-        } else if (FVX == -1)
-        {
+        } else if (FVX == -1) {
             FVX = 0;
             FVY = -1;
-        } else if (FVY == 1)
-        {
+        } else if (FVY == 1) {
             FVX = -1;
             FVY = 0;
-        } else
-        {
+        } else {
             FVX = 1;
             FVY = 0;
         }
+    }
+    
+    public void teleportieren(int i_x, int i_y)
+    {
+        FKopfX = i_x;
+        FKopfY = i_y;
     }
 }
